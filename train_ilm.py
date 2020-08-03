@@ -413,7 +413,7 @@ def train(args):
       model = model_type(cfg)
     else:
       print('from pretrained checkpoint')
-      model = model_type.from_pretrained(args.model_name)
+      model = model_type.from_pretrained('data/gpt-2-pytorch')
   model.resize_token_embeddings(vocab_size)
   model.to(device)
   model.train()
