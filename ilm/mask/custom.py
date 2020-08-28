@@ -3,9 +3,92 @@ import random
 
 from .base import MaskFn
 
+
+
+class MaskTokenNumberType(Enum):
+  ONE = 0
+  TWO = 1
+  THREE = 2
+  FOUR = 3
+  FIVE = 4
+  SIX = 5
+  SEVEN_OR_MORE = 6
+
+
+
+class MaskTokenNumber(MaskFn):
+  def __init__(self, p=0.15):
+    self.p = p
+
+  @classmethod
+  def mask_types(cls):
+    return list(MaskTokenNumberType)
+
+  @classmethod
+  def mask_type_serialize(cls, m_type):
+    return m_type.name.lower()
+
+  def mask(self, doc):
+    #print(doc)
+    split = doc.split(" ")
+    assert split[1] == "@", split
+    i = 2
+    masked_spans = []
+    while i < len(split):
+      if random.random() < self.p:
+         # mask starting at i
+         choice = random.random()
+         if choice < 0.4 or i+1 == len(split):
+             length = 1
+             span_type = MaskTokenNumberType.ONE
+         elif choice < 0.6 or i+2 == len(split):
+             length = 2
+             span_type = MaskTokenNumberType.TWO
+         elif choice < 0.65 or i+3 == len(split):
+             length = 3
+             span_type = MaskTokenNumberType.THREE
+         elif choice < 0.75 or i+4 == len(split):
+             length = 4
+             span_type = MaskTokenNumberType.FOUR
+         elif choice < 0.8 or i+5 == len(split):
+             length = 5
+             span_type = MaskTokenNumberType.FIVE
+         elif choice < 0.85 or i+6 == len(split):
+             length = 6
+             span_type = MaskTokenNumberType.SIX
+         elif choice < 0.9 or i+7 == len(split):
+             length = 7
+             span_type = MaskTokenNumberType.SEVEN_OR_MORE
+         elif choice < 0.95 or i+8 == len(split):
+             length = 8
+             span_type = MaskTokenNumberType.SEVEN_OR_MORE
+         elif choice < 1.0:
+             length = 9
+             span_type = MaskTokenNumberType.SEVEN_OR_MORE
+         words = split[i:i+length]
+ #        print(words, length)
+         masked_spans.append((span_type, i+sum([len(x) for x in split[:i]]), length -1 + sum([len(x) for x in split[i:i+length]])))
+#         print([doc[masked_spans[-1][1]:masked_spans[-1][1]+masked_spans[-1][2]]])
+         i += length
+      else:
+         i += 1
+#    for span_offset, char in enumerate(doc):
+#      if not char.isalnum() and len(char.strip()) > 0 and random.random() < self.p:
+#        if char in ['.', '?', '!']:
+#          span_type = MaskTokenNumberType.SENTENCE_TERMINAL
+#        else:
+#          span_type = MaskTokenNumberType.OTHER
+#        span_len = 1
+#        masked_spans.append((span_type, span_offset, span_len))
+    return masked_spans
+
+
+
+
 class MaskPunctuationType(Enum):
   SENTENCE_TERMINAL = 0
   OTHER = 1
+
 
 class MaskPunctuation(MaskFn):
   def __init__(self, p=0.5):
