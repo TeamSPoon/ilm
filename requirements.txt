@@ -3,7 +3,7 @@ botocore==1.16.16
 certifi==2020.4.5.1
 chardet==3.0.4
 click==7.1.2
-dataclasses==0.7
+dataclasses
 docutils==0.15.2
 filelock==3.0.12
 idna==2.9
@@ -19,7 +19,7 @@ sacremoses==0.0.43
 sentencepiece==0.1.91
 six==1.15.0
 tokenizers==0.5.2
-torch==1.4.0
+torch
 tqdm==4.46.0
 transformers==2.7.0
 urllib3==1.25.9
