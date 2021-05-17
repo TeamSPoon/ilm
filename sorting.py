@@ -70,6 +70,12 @@ def sort_masking(array):
 
 if __name__ == '__main__':
     pickle_filename = sys.argv[1]
-    number_of_documents = sys.argv[2]
-    arxiv_masks = load_pickle(pickle_filename, number_of_documents)
-    ordered_masks = sort_masking()
+    number_of_documents = int(sys.argv[3])
+    result_pickle_filename = sys.argv[2]
+    if pickle_filename == result_pickle_filename:
+        print("Cannot overwrite input pickle file (argument 1). Use a different output filename (argument 2)")
+    else:
+        masks = load_pickle(pickle_filename, number_of_documents)
+        ordered_masks = sort_masking(masks)
+        with open(result_pickle_filename, 'wb') as result_file:
+            pickle.dump(ordered_masks, result_file)
