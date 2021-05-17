@@ -77,6 +77,7 @@ if __name__ == '__main__':
         print("1. the input pickle filename")
         print("2. the output pickle filename")
         print("3. the number of documents in the input pickle to sort into the output. 20 => first 20 will be sorted and dumped into the output pickle. Use 0 to imply all documents")
+        exit(0)
     pickle_filename = sys.argv[1]
     number_of_documents = int(sys.argv[3])
         
