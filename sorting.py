@@ -18,13 +18,18 @@ def count_mask_types(masking):
 
 def filter_words(array, ordered_masks):
     # ONLY WORD maskings
+    local_masks = []
     for document in array:
         bool_arr = [count_mask_types(masking)[4] == len(masking) for masking in document[1]]
         word_maskings = [document[1][idx] for idx, e in enumerate(bool_arr) if e == True]
         ordered_masks.append((document[0], word_maskings))
+        local_masks.append((document[0], word_maskings))
+    with open("words.pkl", "wb") as pickle_file:
+        pickle.dump(local_masks, pickle_file)
 
 def filter_ngrams(array, ordered_masks):
     # ONLY WORD OR NGRAM maskings
+    local_masks = []
     for document in array:
         bool_arr = []
         for masking in document[1]:
@@ -32,9 +37,13 @@ def filter_ngrams(array, ordered_masks):
             bool_arr.append(c[3] != 0 and c[4] + c[3] == len(masking)) 
         ngram_maskings = [document[1][idx] for idx, e in enumerate(bool_arr) if e == True]
         ordered_masks.append((document[0], ngram_maskings))
+        local_masks.append((document[0], ngram_maskings))
+    with open("ngrams.pkl", "wb") as pickle_file:
+        pickle.dump(local_masks, pickle_file)
 
 def filter_sentences(array, ordered_masks):
     # ONLY WORD OR NGRAM OR SENTENCE maskings
+    local_masks = []
     for document in array:
         bool_arr = []
         for masking in document[1]:
@@ -42,9 +51,13 @@ def filter_sentences(array, ordered_masks):
             bool_arr.append(c[2] != 0 and c[4] + c[3] + c[2] == len(masking)) 
         sentence_maskings = [document[1][idx] for idx, e in enumerate(bool_arr) if e == True]
         ordered_masks.append((document[0], sentence_maskings))
+        local_masks.append((document[0], sentence_maskings))
+    with open("sentences.pkl", "wb") as pickle_file:
+        pickle.dump(local_masks, pickle_file)
 
 def filter_paragraphs(array, ordered_masks):
     # ONLY WORD OR NGRAM OR SENTENCE OR PARAGRAPH maskings
+    local_masks = []
     for document in array:
         bool_arr = []
         for masking in document[1]:
@@ -52,9 +65,13 @@ def filter_paragraphs(array, ordered_masks):
             bool_arr.append(c[1] != 0 and c[4] + c[3] + c[2] + c[1] == len(masking)) 
         paragraph_maskings = [document[1][idx] for idx, e in enumerate(bool_arr) if e == True]
         ordered_masks.append((document[0], paragraph_maskings))
+        local_masks.append((document[0], paragraph_maskings))
+    with open("paragraphs.pkl", "wb") as pickle_file:
+        pickle.dump(local_masks, pickle_file)
 
 def filter_documents(array, ordered_masks):
     # if any DOCUMENT maskings present
+    local_masks = []
     for document in array:
         bool_arr = []
         for masking in document[1]:
@@ -62,6 +79,9 @@ def filter_documents(array, ordered_masks):
             bool_arr.append(c[0] != 0) 
         document_maskings = [document[1][idx] for idx, e in enumerate(bool_arr) if e == True]
         ordered_masks.append((document[0], document_maskings))
+        local_masks.append((document[0], document_maskings))
+    with open("documents.pkl", "wb") as pickle_file:
+        pickle.dump(local_masks, pickle_file)
 
 def sort_masking(array):
     ordered_masks = []
@@ -69,6 +89,7 @@ def sort_masking(array):
     filter_ngrams(array, ordered_masks)
     filter_sentences(array, ordered_masks)
     filter_paragraphs(array, ordered_masks)
+    filter_documents(array, ordered_masks)
     return ordered_masks
 
 if __name__ == '__main__':
