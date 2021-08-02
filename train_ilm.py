@@ -528,10 +528,11 @@ def train(args):
           eval_token_loss_sums = defaultdict(float)
           for i, eval_batch in enumerate(eval_dataloader):
             with torch.no_grad():
+          
               eval_inputs, eval_tts = tuple(t.to(device) for t in eval_batch)
               eval_logits, _ = model(eval_inputs)
               eval_logits_relevant = eval_logits[:, :-1].contiguous().view(-1, eval_logits.shape[-1])
-
+              print("eval_logits", eval_logits)
               for tag, tts in [
                   ('context', [TargetType.CONTEXT]),
                   ('infill', [TargetType.INFILL, TargetType.INFILL_SPECIAL]),
