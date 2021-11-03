@@ -2,6 +2,7 @@ from enum import Enum
 from collections import defaultdict
 import multiprocessing
 import os
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 import pickle
 import random
 import time
