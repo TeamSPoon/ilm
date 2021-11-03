@@ -33,6 +33,8 @@ python train_ilm.py \\
 if __name__ == '__main__':
   import os
   import sys
+  # set GPU to 0
+  os.environ["CUDA_VISIBLE_DEVICES"]="0"
 
   try:
     train_tmp_dir = os.environ['ILM_DIR']
