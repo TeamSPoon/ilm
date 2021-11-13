@@ -65,3 +65,37 @@ class MaskProperNoun(MaskFn):
       if pos == 'NNP' and random.random() < self.p:
         masked_spans.append((MaskProperNounType.PROPER_NOUN, off, len(t)))
     return masked_spans
+
+class MaskFillerWordType(Enum):
+  FILLER_WORD = 0
+  FILLER_NGRAM = 1
+
+class MaskFillerWords(MaskFn):
+  def __init__(self, p=1.):
+      self.p = .8
+      with open("scripts/resources/filler_words.txt") as f:
+          self.filler_words = set([l[:-1] for l in f.readlines()])
+  @classmethod
+  def mask_types(cls):
+    return list(MaskProperNounType)
+
+  @classmethod
+  def mask_type_serialize(cls, m_type):
+    return m_type.name.lower()
+
+  def mask(self, doc):
+    masked_spans = []
+    toks = word_tokenize(doc)
+    toks_offsets = tokens_offsets(doc, toks)
+    last_word_ngram = False
+    for t, off in zip(toks, toks_offsets):
+      if t.lower() in self.filler_words and random.random() < self.p:
+        if last_word_ngram:
+          prev = masked_spans.pop()
+          masked_spans.append((MaskFillerWordType.FILLER_NGRAM, prev[1], (off-prev[1])+len(t)))
+        else:
+          masked_spans.append((MaskFillerWordType.FILLER_WORD, off, len(t)))
+        last_word_ngram = True
+      else:
+        last_word_ngram = False
+    return masked_spans
