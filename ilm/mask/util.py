@@ -16,6 +16,8 @@ def mask_cls_str_to_type(mask_cls):
 
 def masked_spans_bounds_valid(masked_spans, d_len):
   for span_off, span_len in [s[-2:] for s in masked_spans]:
+    if span_off is None:
+      return False
     if span_off < 0 or span_len <= 0 or span_off+span_len > d_len:
       return False
   return True

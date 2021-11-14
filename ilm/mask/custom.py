@@ -85,21 +85,18 @@ class MaskFillerWords(MaskFn):
 
   def mask(self, doc):
     masked_spans = []
-    try:
-      toks = word_tokenize(doc)
-      toks_offsets = tokens_offsets(doc, toks)
-      last_word_ngram = False
-      for t, off in zip(toks, toks_offsets):
-        if t.lower() in self.filler_words and random.random() < self.p:
-          if last_word_ngram:
-            prev = masked_spans.pop()
-            masked_spans.append((MaskFillerWordType.FILLER_NGRAM, prev[1], (off-prev[1])+len(t)))
-          else:
-            masked_spans.append((MaskFillerWordType.FILLER_WORD, off, len(t)))
-          last_word_ngram = True
+    toks = word_tokenize(doc)
+    toks_offsets = tokens_offsets(doc, toks)
+    last_word_ngram = False
+    for t, off in zip(toks, toks_offsets):
+      if t.lower() in self.filler_words and random.random() < self.p:
+        if last_word_ngram:
+          prev = masked_spans.pop()
+          masked_spans.append((MaskFillerWordType.FILLER_NGRAM, prev[1], (off-prev[1])+len(t)))
         else:
-          last_word_ngram = False
-      return masked_spans
-    except:
-      return []
+          masked_spans.append((MaskFillerWordType.FILLER_WORD, off, len(t)))
+        last_word_ngram = True
+      else:
+        last_word_ngram = False
+    return masked_spans
     
