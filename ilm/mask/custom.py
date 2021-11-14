@@ -99,6 +99,7 @@ class MaskFillerWords(MaskFn):
           last_word_ngram = True
         else:
           last_word_ngram = False
+      return masked_spans
     except:
       return []
-    return masked_spans
+    
