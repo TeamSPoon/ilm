@@ -100,6 +100,7 @@ class MaskFillerWords(MaskFn):
         else:
           last_word_ngram = False
     except:
+      print('Error')
       print(doc)
       return []
     return masked_spans
