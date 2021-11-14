@@ -26,9 +26,11 @@ def randomly_mask_document(
 
     if max_masked_spans is not None and len(masked_spans) > max_masked_spans:
       return False, 'Too many spans'
-
-    if ensure_valid_bounds_in_spans and not masked_spans_bounds_valid(masked_spans, len(doc)):
-      return False, 'Masked span boundaries are invalid'
+    try: 
+      if ensure_valid_bounds_in_spans and not masked_spans_bounds_valid(masked_spans, len(doc)):
+        return False, 'Masked span boundaries are invalid'
+    except:
+      print(masked_spans)
 
     if ensure_nonoverlapping_spans and masked_spans_overlap(masked_spans):
       return False, 'Masked spans overlap'
