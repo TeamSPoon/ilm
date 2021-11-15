@@ -77,7 +77,7 @@ class MaskFillerWords(MaskFn):
           self.filler_words = set([l[:-1] for l in f.readlines()])
   @classmethod
   def mask_types(cls):
-    return list(MaskProperNounType)
+    return list(MaskFillerWordType)
 
   @classmethod
   def mask_type_serialize(cls, m_type):
