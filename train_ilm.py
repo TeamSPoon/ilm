@@ -463,7 +463,8 @@ def train(args):
     eval_token_counts = defaultdict(int)
     eval_token_loss_sums = defaultdict(float)
     for i, eval_batch in enumerate(eval_dataloader):
-      print(str(i) + " / " + str(len(eval_dataloader)))
+      if i % 1000 == 0:
+        print(str(i) + " / " + str(len(eval_dataloader)))
       with torch.no_grad():
         eval_inputs, eval_tts = tuple(t.to(device) for t in eval_batch)
         eval_logits, _ = model(eval_inputs)
