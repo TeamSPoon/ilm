@@ -100,11 +100,11 @@ def _apply_masked_spans(
     span_off = context.index(None)
     assert all([i is None for i in context[span_off:span_off+span_len]])
     del context[span_off:span_off+span_len]
-    substitution = mask_type_to_substitution[span_type]
-    if type(substitution) == list:
-      context[span_off:span_off] = substitution
-    else:
-      context.insert(span_off, substitution)
+    # substitution = mask_type_to_substitution[span_type]
+    # if type(substitution) == list:
+    #   context[span_off:span_off] = substitution
+    # else:
+    #   context.insert(span_off, substitution)
   assert None not in context
 
   return context, answers
