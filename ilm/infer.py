@@ -46,6 +46,61 @@ def sample_from_logits(
   return next_tokens
 
 
+def infill_with_naive(
+  model,
+  special_tokens_to_ids,
+  x,
+  num_infills=1,
+  max_sequence_length=256,
+  nucleus=0.95):
+  
+  _sep_id = special_tokens_to_ids['<|startofinfill|>']
+  _end_span_id = special_tokens_to_ids['<|endofinfill|>']
+  _special_ids = special_tokens_to_ids.values()
+  
+  # Make sure example doesn't already ends with [sep]
+  if x[-1] == _sep_id:
+    x = x[:-1]
+  
+  k = 1
+  
+  # Decode until we have that many blanks
+  with torch.no_grad():
+    device = next(model.parameters()).device
+    context = torch.tensor(x + [_sep_id], dtype=torch.long, device=device).unsqueeze(0).repeat(num_infills, 1)
+    
+    terminated = []
+
+    while context.shape[0] > 0:
+      logits = model(context)[0][:, -1]
+      next_tokens = sample_from_logits(logits, nucleus=nucleus)
+      context = torch.cat((context, next_tokens), dim=1)
+      
+      num_predicted_spans = (context == _end_span_id).long().sum(dim=1)
+      
+      terminate_expected = num_predicted_spans >= k
+      terminate_toolong = torch.ones_like(context).long().sum(dim=1) >= max_sequence_length
+      terminate = terminate_expected | terminate_toolong
+      
+      if torch.any(terminate):
+        terminated_seqs = context[terminate, len(x)+1:]
+        terminated.extend([list(s) for s in terminated_seqs.cpu().numpy()])
+        context = context[~terminate, :]
+  
+  # Collect generated spans
+  generated_spans = []
+  for gen in terminated:
+    spans = []
+    while _end_span_id in gen:
+      spans.append(gen[:gen.index(_end_span_id)])
+      gen = gen[gen.index(_end_span_id) + 1:]
+    while len(spans) < k:
+      spans.append([])
+    generated_spans.append(spans)
+  
+
+  return generated_spans[0]
+
 def infill_with_ilm(
   model,
   special_tokens_to_ids,
@@ -68,8 +123,8 @@ def infill_with_ilm(
     if tok_id in _special_ids:
       blank_idxs.append(i)
   k = len(blank_idxs)
-  # if k == 0:
-  #   raise ValueError()
+  if k == 0:
+    raise ValueError()
   
   # Decode until we have that many blanks
   with torch.no_grad():
@@ -115,3 +170,4 @@ def infill_with_ilm(
     generated.append(context)
 
   return generated
+
