@@ -68,8 +68,8 @@ def infill_with_ilm(
     if tok_id in _special_ids:
       blank_idxs.append(i)
   k = len(blank_idxs)
-  if k == 0:
-    raise ValueError()
+  # if k == 0:
+  #   raise ValueError()
   
   # Decode until we have that many blanks
   with torch.no_grad():
