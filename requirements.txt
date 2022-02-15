@@ -4,10 +4,14 @@ certifi==2020.4.5.1
 chardet==3.0.4
 click==7.1.2
 #<<<<<<< HEAD
+#<<<<<<< HEAD
 dataclasses #==0.7
 #=======
 #dataclasses==0.6
 #>>>>>>> 298ae50db5b0b96e8c1eb547f01ab2b093dec34f
+#=======
+dataclasses
+#>>>>>>> c9cfc05ac1b562c37cfd86105a5557fa32d9ca49
 docutils==0.15.2
 filelock==3.0.12
 idna==2.9
@@ -23,7 +27,11 @@ sacremoses==0.0.43
 #sentencepiece==0.1.91
 six==1.15.0
 tokenizers==0.5.2
+#<<<<<<< HEAD
 #torch==1.4.0
+#=======
+torch
+#>>>>>>> c9cfc05ac1b562c37cfd86105a5557fa32d9ca49
 tqdm==4.46.0
 transformers==2.7.0
 urllib3==1.25.9
