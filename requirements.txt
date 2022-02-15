@@ -35,3 +35,5 @@ torch
 tqdm==4.46.0
 transformers==2.7.0
 urllib3==1.25.9
+setuptools=59.5.0
+

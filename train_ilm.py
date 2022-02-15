@@ -588,7 +588,7 @@ def train(args):
         # TODO: Option to skip training on INFILL_REDUNDANT?
         # NOTE: This would give Task.NAIVE/Task.LM less supervision overall but put them more in line with the supervision that Task.ILM and Task.NO_CONTEXT_ILM receive
         labels_infill = tts_to_labels(inputs, tts, [TargetType.INFILL, TargetType.INFILL_SPECIAL, TargetType.INFILL_REDUNDANT])
-        logits = model(inputs)['logits]
+        logits = model(inputs)['logits']
         logits_relevant = logits[:, :-1].contiguous().view(-1, logits.shape[-1])
         loss_context = F.cross_entropy(
             logits_relevant,
