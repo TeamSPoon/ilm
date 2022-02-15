@@ -2,15 +2,15 @@ from acl20_repro import PREMASKED_DATA, PRETRAINED_MODELS, PRETRAINED_MODEL_CONF
 
 # NOTE: https://chrisdonahue.com/gdrive-wget
 _CMD_TEMPL = """
-mkdir -p {eval_tmp_dir}/data
-mkdir -p {eval_tmp_dir}/models/{model_tag}
+# mkdir -p {eval_tmp_dir}/data
+# mkdir -p {eval_tmp_dir}/models/{model_tag}
 
 # Download pre-masked data
-wget -nc --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id={data_id}' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\\1\\n/p')&id={data_id}" -O {eval_tmp_dir}/data/{data_tag}_test.pkl && rm -rf /tmp/cookies.txt
+# wget -nc --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id={data_id}' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\\1\\n/p')&id={data_id}" -O {eval_tmp_dir}/data/{data_tag}_test.pkl && rm -rf /tmp/cookies.txt
 
 # Download pre-trained model
-wget -nc --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id={model_id}' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\\1\\n/p')&id={model_id}" -O {eval_tmp_dir}/models/{model_tag}/pytorch_model.bin && rm -rf /tmp/cookies.txt
-wget -nc --no-check-certificate 'https://docs.google.com/uc?export=download&id=15JnXi7L6LeEB2fq4dFK2WRvDKyX46hVi' -O {eval_tmp_dir}/models/{model_tag}/config.json
+# wget -nc --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id={model_id}' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\\1\\n/p')&id={model_id}" -O {eval_tmp_dir}/models/{model_tag}/pytorch_model.bin && rm -rf /tmp/cookies.txt
+# wget -nc --no-check-certificate 'https://docs.google.com/uc?export=download&id=15JnXi7L6LeEB2fq4dFK2WRvDKyX46hVi' -O {eval_tmp_dir}/models/{model_tag}/config.json
 
 # NOTE: train_ilm.py won't load weights unless it sees this file
 touch {eval_tmp_dir}/models/{model_tag}/step.pkl
