@@ -18,13 +18,13 @@ python train_ilm.py \\
     --task {task} \\
     --data_loader_num_workers 4 \\
     --train_examples_tag {data_tag}_train \\
-    --train_batch_size 8 \\
+    --train_batch_size 4 \\
     --train_batch_accumulation 3 \\
     --train_sequence_length 256 \\
     --train_skip_naive_incomplete \\
     --eval_examples_tag {data_tag}_valid \\
     --eval_max_num_examples 512 \\
-    --eval_batch_size 8 \\
+    --eval_batch_size 4 \\
     --eval_sequence_length 256 \\
     --eval_skip_naive_incomplete \\
     {extra_args}
