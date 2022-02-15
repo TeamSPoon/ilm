@@ -12,6 +12,7 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from torch.utils.data import (DataLoader, RandomSampler, SequentialSampler, TensorDataset)
+from torch.utils.tensorboard import SummaryWriter
 from tqdm import tqdm
 from transformers import GPT2Config, GPT2LMHeadModel, AdamW, CONFIG_NAME, WEIGHTS_NAME
 try:
@@ -553,8 +554,10 @@ def train(args):
           eval_dict = {}
           for tag, count in eval_token_counts.items():
             loss = eval_token_loss_sums[tag]
+            writer.add_scalar('Eval/Loss', loss, step)
             if count > 0:
               loss /= count
+            writer.add_scalar('Eval/Avg_loss', loss, step)
             eval_dict['eval_{}_count'.format(tag)] = count
             eval_dict['eval_{}_loss'.format(tag)] = loss
           eval_dict['eval_time'] = time.time() - eval_start
@@ -600,11 +603,14 @@ def train(args):
         loss_infill_item = loss_infill.item()
 
         loss = loss_infill
+        writer.add_scalar("Train/Loss", loss, step)
         if args.train_context:
           loss += loss_context
 
         if args.train_batch_accumulation != 1:
           loss /= float(args.train_batch_accumulation)
+
+        writer.add_scalar("Train/Loss_avg", loss, step)
         loss.backward()
 
         # Summarize
@@ -734,6 +740,7 @@ if __name__ == '__main__':
         project=args.wandb_project_name,
         name=args.experiment_name)
     wandb.config.update(args)
+  writer = SummaryWriter()
 
   if args.seed is None:
     args.seed = random.randint(0, 1e6)
